@@ -1,0 +1,55 @@
+@use '../config/color';
+
+@use '../util/mixin/shadow';
+@use '../util/mixin/transition';
+
+button,
+.btn {
+  @include transition.set(('box-shadow', 'background-color', 'border-color'));
+  display: inline-block;
+  padding: .4rem 1.2rem;
+  margin: .5rem 0;
+  border: 2px solid transparent;
+  font-size: .8rem;
+  font-weight: bold;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &.outline {
+    background-color: transparent!important;
+    border: 2px solid;
+  }
+
+  &:hover { @include shadow.box($ver: 0) }
+
+  @each $name, $color in color.accent() {
+    $c: color.theme('light', 'bg');
+    $hc: darken(color.theme('light', 'bg'), 20%);
+
+    @if lightness($color) > 70 {
+      $c: color.theme('light', 'txt');
+      $hc: darken($color, 10%);
+    } @else {
+      $c: color.theme('dark', 'txt');
+      $hc: lighten($color, 10%);
+    }
+
+    &.c-#{$name} {
+      background-color: $color;
+      color: $c;
+
+      &:hover { background-color: $hc }
+
+      &.outline {
+        color: $color;
+        border-color: $color;
+
+        &:hover {
+          background-color: color.white(5)!important;
+          color: $hc;
+          border-color: $hc;
+        }
+      }
+    }
+  }
+}
